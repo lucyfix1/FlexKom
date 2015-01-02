@@ -43,6 +43,9 @@ import javax.jws.WebResult;
 @WebService(serviceName = "NewWebService2")
 @Stateless()
 public class NewWebService2 {
+    private final String dbAddress = "jdbc:mysql://localhost:3306/flexkom2";
+    private final String user = "root";
+    private final String password = "mysql";
 
     /**
      * Web service operation
@@ -54,7 +57,7 @@ public class NewWebService2 {
     @WebMethod(operationName = "updateProduktyOddzialy")
     public String updateProduktyOddzialy(@WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "produktID") int produktID, @WebParam(name = "ilosc") int ilosc){
         //TODO write your implementation code here:
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
         System.out.println(ourJavaTimestampObject.toString());
@@ -91,7 +94,7 @@ public class NewWebService2 {
     @WebMethod(operationName = "getOddzialyProdukty")
     @WebResult(name = "bidNumber")
     public List<ProduktyOddzialy> getOddzialyProdukty() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<ProduktyOddzialy> list = new ArrayList<>();
         try {
@@ -123,7 +126,7 @@ public class NewWebService2 {
      */
     @WebMethod(operationName = "insertNewClient")
     public String insertNewClient(@WebParam(name = "imie") String imie, @WebParam(name = "nazwisko") String nazwisko, @WebParam(name = "plec") String plec, @WebParam(name = "dataUrodzenia") String dataUrodzenia, @WebParam(name = "adres") String adres, @WebParam(name = "kodPocztowy") String kodPocztowy, @WebParam(name = "miasto") String miasto, @WebParam(name = "nrTelefonu") String nrTelefonu, @WebParam(name = "login") String login, @WebParam(name = "haslo") String haslo, @WebParam(name = "email") String email) {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
         System.out.println(ourJavaTimestampObject.toString());
@@ -164,7 +167,7 @@ public class NewWebService2 {
      */
     @WebMethod(operationName = "insertZamowienie")
     public String insertZamowienie(@WebParam(name = "produktID") int produktID, @WebParam(name = "klientID") int klientID, @WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "dataZlozeniaZamowienia") String dataZlozeniaZamowienia) {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
         System.out.println(ourJavaTimestampObject.toString());
@@ -200,7 +203,7 @@ public class NewWebService2 {
      */
     @WebMethod(operationName = "updateZamownienia")
     public String updateZamownienia(@WebParam(name = "zamowienieID") int zamowienieID, @WebParam(name = "newStatus") String newStatus) {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
         String insertQuery = "update zamowienia set status = ?,ostatniaModyfikacja = ? where zamowienieID = ?";
@@ -231,7 +234,7 @@ public class NewWebService2 {
      */
     @WebMethod(operationName = "getOddzialOstatniaModyfikacja")
     public java.util.Date getOddzialOstatniaModyfikacja(@WebParam(name = "oddzialID") String oddzialID) {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         java.sql.Timestamp datetime = null;
         try {
@@ -258,7 +261,7 @@ public class NewWebService2 {
      */
     @WebMethod(operationName = "updateDataOstatniejModyfikacji")
     public String updateDataOstatniejModyfikacji(@WebParam(name = "oddzialID") int oddzialID) {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
         String insertQuery = "update oddzialyostatniamodyfikacja set ostatniaModyfikacja = ? where oddzialID = ?";
@@ -289,7 +292,7 @@ public class NewWebService2 {
     @WebMethod(operationName = "getIloscProduktuInneOddzialy")
     public List<ProduktOddzialy> getIloscProduktuInneOddzialy(@WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "produktID") int produktID){
         
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<ProduktOddzialy> list = new ArrayList<>();
         ResultSet rs = null;
@@ -328,7 +331,7 @@ public class NewWebService2 {
      */
     @WebMethod(operationName = "getKategorie")
     public List<Kategorie> getKategorie() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Kategorie> list = new ArrayList<>();
         ResultSet rs = null;
@@ -361,7 +364,7 @@ public class NewWebService2 {
      */
     @WebMethod(operationName = "getKategorieProdukty")
     public List<KategorieProducent> getKategorieProducent() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<KategorieProducent> list = new ArrayList<>();
         ResultSet rs = null;
@@ -391,7 +394,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getKlienci")
     public List<Klienci> getKlienci() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Klienci> list = new ArrayList<>();
         ResultSet rs = null;
@@ -423,7 +426,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getPracownicy")
     public List<Pracownicy> getPracownicy() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Pracownicy> list = new ArrayList<>();
         ResultSet rs = null;
@@ -457,7 +460,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getProducenci")
     public List<Producenci> getProducenci() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Producenci> list = new ArrayList<>();
         ResultSet rs = null;
@@ -487,7 +490,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getProdukty")
     public List<Produkty> getProdukty() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Produkty> list = new ArrayList<>();
         ResultSet rs = null;
@@ -520,7 +523,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getUprawnienia")
     public List<Uprawnienia> getUprawnienia() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Uprawnienia> list = new ArrayList<>();
         ResultSet rs = null;
@@ -550,7 +553,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getUzytkownicy")
     public List<Uzytkownicy> getUzytkownicy() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Uzytkownicy> list = new ArrayList<>();
         ResultSet rs = null;
@@ -591,7 +594,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getUzytkownicyUprawnienia")
     public List<UzytkownicyUprawnienia> getUzytkownicyUprawnienia() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<UzytkownicyUprawnienia> list = new ArrayList<>();
         ResultSet rs = null;
@@ -621,7 +624,7 @@ public class NewWebService2 {
     
     @WebMethod(operationName = "getZamowienia")
     public List<Zamowienie> getZamowienia() {
-        Connection con = MysqlConnection.connect("jdbc:mysql://localhost:3306/flexkom2","root","mysql");
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Zamowienie> list = new ArrayList<>();
         ResultSet rs = null;
