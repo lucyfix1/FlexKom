@@ -40,9 +40,9 @@ import javax.jws.WebResult;
  *
  * @author Dariusz
  */
-@WebService(serviceName = "NewWebService2")
+@WebService(serviceName = "NewWebService")
 @Stateless()
-public class NewWebService2 {
+public class NewWebService {
     private final String dbAddress = "jdbc:mysql://localhost:3306/flexkom2";
     private final String user = "root";
     private final String password = "mysql";
@@ -74,13 +74,13 @@ public class NewWebService2 {
             preparedStatement.close();
             return "zaktualizowano";
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             return "dane nie zostały zaktualizowane";
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -109,12 +109,12 @@ public class NewWebService2 {
                 list.add(pro);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return list;
@@ -151,13 +151,13 @@ public class NewWebService2 {
             preparedStatement.close();
             return "dodano użytkownika";
         } catch (SQLException | ParseException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             return "użytkownik nie został dodany";
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -187,13 +187,13 @@ public class NewWebService2 {
             preparedStatement.close();
             return "dodano zamowienie";
         } catch (SQLException | ParseException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             return "zamowienie nie zostało dodane";
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -218,13 +218,13 @@ public class NewWebService2 {
             preparedStatement.close();
             return "zaktualizowano";
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             return "dane nie zostały zaktualizowane";
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -245,13 +245,13 @@ public class NewWebService2 {
                 datetime = rs.getTimestamp("ostatniaModyfikacja");
             return datetime;
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -275,13 +275,13 @@ public class NewWebService2 {
             preparedStatement.close();
             return "zaktualizowano date";
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             return "data nie została zaktualizowana";
         } finally {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -321,7 +321,7 @@ public class NewWebService2 {
             
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -354,7 +354,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -387,7 +387,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -419,7 +419,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -453,7 +453,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -483,7 +483,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -516,7 +516,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -546,7 +546,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -587,7 +587,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -617,7 +617,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -652,7 +652,7 @@ public class NewWebService2 {
             con.close();          
            
         } catch (SQLException ex) {
-            Logger.getLogger(NewWebService2.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
