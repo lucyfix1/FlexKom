@@ -7,15 +7,25 @@
  >
     <message name="synchronize"/>
     <message name="synchronizeResponse"/>
+    <message name="getZamowieniaUzytkownika"/>
+    <message name="getZamowieniaUzytkownikaResponse"/>
     <portType name="NewWebService">
         <operation name="synchronize">
             <input message="tns:synchronize"/>
             <output message="tns:synchronizeResponse"/>
         </operation>
+        <operation name="getZamowieniaUzytkownika">
+            <input message="tns:getZamowieniaUzytkownika"/>
+            <output message="tns:getZamowieniaUzytkownikaResponse"/>
+        </operation>
     </portType>
     <binding name="NewWebServicePortBinding" type="tns:NewWebService">
         <wsp:PolicyReference URI="#NewWebServicePortBindingPolicy"/>
         <operation name="synchronize">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="getZamowieniaUzytkownika">
             <input/>
             <output/>
         </operation>

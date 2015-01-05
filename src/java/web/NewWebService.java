@@ -656,4 +656,42 @@ public class NewWebService {
         }
         return list;
     }
+    
+    @WebMethod(operationName = "getZamowieniaUzytkownika")
+    public List<Zamowienie> getZamowieniaUzytkownika(@WebParam(name = "login") String login) {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        List<Zamowienie> list = new ArrayList<>();
+        ResultSet rs = null;
+            
+        try {
+
+            st = con.createStatement();
+            String sql = ("select * from zamowienia " +
+                          "inner join klienci on zamowienia.klientID = klienci.klientID " +
+                          "inner join uzytkownicy on  klienci.uzytkownikID = uzytkownicy.uzytkownikID " +
+                          "where uzytkownicy.login = '" + login + "'");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Zamowienie zamowienie = new Zamowienie();
+                zamowienie.setZamowienieID(rs.getInt("zamowienieID"));
+                zamowienie.setProduktID(rs.getInt("produktID"));
+                zamowienie.setKlientOD(rs.getInt("klientID"));
+                zamowienie.setOddzialID(rs.getInt("oddzialID"));
+                zamowienie.setStatus(rs.getString("status"));
+                zamowienie.setOstatniaModyfikacja(rs.getDate("ostatniaModyfikacja"));
+                zamowienie.setDataZlozeniaZamowienia(rs.getDate("dataZlozeniaZamowienia"));
+                list.add(zamowienie);
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 }
