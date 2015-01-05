@@ -54,22 +54,19 @@ public class NewWebService {
      * @param ilosc
      * @return 
      */
-    @WebMethod(operationName = "updateProduktyOddzialy")
-    public String updateProduktyOddzialy(@WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "produktID") int produktID, @WebParam(name = "ilosc") int ilosc){
+    @WebMethod(operationName = "uaktylnijProduktyOddzialy")
+    public String uaktylnijProduktyOddzialy(@WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "produktID") int produktID, @WebParam(name = "ilosc") int ilosc){
         //TODO write your implementation code here:
         Connection con = MysqlConnection.connect(dbAddress,user,password);
-        Calendar calendar = Calendar.getInstance();
-        java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
-        System.out.println(ourJavaTimestampObject.toString());
-        String insertQuery = "update produktyoddzialy set ilosc = ?,ostatniaModyfikacja = ? where oddzialID = ? and produktID = ?";
+
+        String insertQuery = "update produktyoddzialy set ilosc = ? where oddzialID = ? and produktID = ?";
         
         PreparedStatement preparedStatement;
         try {
             preparedStatement = con.prepareStatement(insertQuery);
-            preparedStatement.setInt(3, oddzialID);
-            preparedStatement.setInt(4, produktID);
+            preparedStatement.setInt(2, oddzialID);
+            preparedStatement.setInt(3, produktID);
             preparedStatement.setInt(1, ilosc);
-            preparedStatement.setTimestamp(2, ourJavaTimestampObject);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return "zaktualizowano";
@@ -124,8 +121,8 @@ public class NewWebService {
     /**
      * Web service operation
      */
-    @WebMethod(operationName = "insertNewClient")
-    public String insertNewClient(@WebParam(name = "imie") String imie, @WebParam(name = "nazwisko") String nazwisko, @WebParam(name = "plec") String plec, @WebParam(name = "dataUrodzenia") String dataUrodzenia, @WebParam(name = "adres") String adres, @WebParam(name = "kodPocztowy") String kodPocztowy, @WebParam(name = "miasto") String miasto, @WebParam(name = "nrTelefonu") String nrTelefonu, @WebParam(name = "login") String login, @WebParam(name = "haslo") String haslo, @WebParam(name = "email") String email) {
+    @WebMethod(operationName = "dodajNowegoKlienta")
+    public String dodajNowegoKlienta(@WebParam(name = "imie") String imie, @WebParam(name = "nazwisko") String nazwisko, @WebParam(name = "plec") String plec, @WebParam(name = "dataUrodzenia") String dataUrodzenia, @WebParam(name = "adres") String adres, @WebParam(name = "kodPocztowy") String kodPocztowy, @WebParam(name = "miasto") String miasto, @WebParam(name = "nrTelefonu") String nrTelefonu, @WebParam(name = "login") String login, @WebParam(name = "haslo") String haslo, @WebParam(name = "email") String email) {
         Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
@@ -165,28 +162,27 @@ public class NewWebService {
     /**
      * Web service operation
      */
-    @WebMethod(operationName = "insertZamowienie")
-    public String insertZamowienie(@WebParam(name = "produktID") int produktID, @WebParam(name = "klientID") int klientID, @WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "dataZlozeniaZamowienia") String dataZlozeniaZamowienia) {
+    @WebMethod(operationName = "dodajZamowienie")
+    public String dodajZamowienie(@WebParam(name = "produktID") int produktID, @WebParam(name = "klientID") int klientID, @WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "pracownikID") int pracownikID) {
         Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
         System.out.println(ourJavaTimestampObject.toString());
-        String insertQuery = "insert into zamowienia (produktID,klientID,oddzialID,status,dataZlozeniaZamowienia,ostatniaModyfikacja) values(?,?,?,'oczekujacy',?,?)";
+        String insertQuery = "insert into zamowienia (produktID,klientID,oddzialID,status,dataZlozeniaZamowienia,pracownikID) values(?,?,?,'oczekujacy',?,?,?)";
         
         PreparedStatement preparedStatement;
         try {
             java.util.Date date = new java.util.Date();
-            java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(dataZlozeniaZamowienia);
             preparedStatement = con.prepareStatement(insertQuery);
             preparedStatement.setInt(1, produktID);
             preparedStatement.setInt(2, klientID);
             preparedStatement.setInt(3, oddzialID);
-            preparedStatement.setDate(4,new java.sql.Date(utilDate.getTime()));
-            preparedStatement.setTimestamp(5,new Timestamp(date.getTime()));
+            preparedStatement.setDate(4,new java.sql.Date(date.getTime()));
+            preparedStatement.setInt(5, pracownikID);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return "dodano zamowienie";
-        } catch (SQLException | ParseException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             return "zamowienie nie zostało dodane";
         } finally {
@@ -201,19 +197,16 @@ public class NewWebService {
     /**
      * Web service operation
      */
-    @WebMethod(operationName = "updateZamownienia")
-    public String updateZamownienia(@WebParam(name = "zamowienieID") int zamowienieID, @WebParam(name = "newStatus") String newStatus) {
+    @WebMethod(operationName = "uaktualnijZamownienia")
+    public String uaktualnijZamownienia(@WebParam(name = "zamowienieID") int zamowienieID, @WebParam(name = "newStatus") String newStatus) {
         Connection con = MysqlConnection.connect(dbAddress,user,password);
-        Calendar calendar = Calendar.getInstance();
-        java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
-        String insertQuery = "update zamowienia set status = ?,ostatniaModyfikacja = ? where zamowienieID = ?";
+        String insertQuery = "update zamowienia set status = ? where zamowienieID = ?";
         
         PreparedStatement preparedStatement;
         try {
             preparedStatement = con.prepareStatement(insertQuery);
-            preparedStatement.setInt(3, zamowienieID);
+            preparedStatement.setInt(2, zamowienieID);
             preparedStatement.setString(1, newStatus);
-            preparedStatement.setTimestamp(2, ourJavaTimestampObject);
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return "zaktualizowano";
@@ -232,7 +225,7 @@ public class NewWebService {
     /**
      * Web service operation
      */
-    @WebMethod(operationName = "getOddzialOstatniaModyfikacja")
+    /*@WebMethod(operationName = "getOddzialOstatniaModyfikacja")
     public java.util.Date getOddzialOstatniaModyfikacja(@WebParam(name = "oddzialID") String oddzialID) {
         Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
@@ -254,12 +247,12 @@ public class NewWebService {
                 Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
+    }*/
 
     /**
      * Web service operation
      */
-    @WebMethod(operationName = "updateDataOstatniejModyfikacji")
+    /*@WebMethod(operationName = "updateDataOstatniejModyfikacji")
     public String updateDataOstatniejModyfikacji(@WebParam(name = "oddzialID") int oddzialID) {
         Connection con = MysqlConnection.connect(dbAddress,user,password);
         Calendar calendar = Calendar.getInstance();
@@ -284,7 +277,7 @@ public class NewWebService {
                 Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
+    }*/
 
     /**
      * Web service operation
@@ -643,8 +636,7 @@ public class NewWebService {
                 zamowienie.setKlientOD(rs.getInt("klientID"));
                 zamowienie.setOddzialID(rs.getInt("oddzialID"));
                 zamowienie.setStatus(rs.getString("status"));
-                zamowienie.setOstatniaModyfikacja(rs.getDate("ostatniaModyfikacja"));
-                zamowienie.setDataZlozeniaZamowienia(rs.getDate("dataZlozeniaZamowienia"));
+                zamowienie.setDataZlozeniaZamowienia(rs.getTimestamp("dataZlozeniaZamowienia").toString());
                 list.add(zamowienie);
             }
             preparedStatement.close();
@@ -658,7 +650,7 @@ public class NewWebService {
     }
     
     @WebMethod(operationName = "getZamowieniaUzytkownika")
-    public List<Zamowienie> getZamowieniaUzytkownika(@WebParam(name = "login") String login) {
+    public List<Zamowienie> getZamowieniaUzytkownika(@WebParam(name = "username") String username) {
         Connection con = MysqlConnection.connect(dbAddress,user,password);
         Statement st;
         List<Zamowienie> list = new ArrayList<>();
@@ -670,7 +662,7 @@ public class NewWebService {
             String sql = ("select * from zamowienia " +
                           "inner join klienci on zamowienia.klientID = klienci.klientID " +
                           "inner join uzytkownicy on  klienci.uzytkownikID = uzytkownicy.uzytkownikID " +
-                          "where uzytkownicy.login = '" + login + "'");
+                          "where uzytkownicy.login = '" + username + "'");
             PreparedStatement preparedStatement;
             preparedStatement = con.prepareStatement(sql);
             rs = preparedStatement.executeQuery();
@@ -681,8 +673,7 @@ public class NewWebService {
                 zamowienie.setKlientOD(rs.getInt("klientID"));
                 zamowienie.setOddzialID(rs.getInt("oddzialID"));
                 zamowienie.setStatus(rs.getString("status"));
-                zamowienie.setOstatniaModyfikacja(rs.getDate("ostatniaModyfikacja"));
-                zamowienie.setDataZlozeniaZamowienia(rs.getDate("dataZlozeniaZamowienia"));
+                zamowienie.setDataZlozeniaZamowienia(rs.getDate("dataZlozeniaZamowienia").toString());
                 list.add(zamowienie);
             }
             preparedStatement.close();
@@ -693,5 +684,35 @@ public class NewWebService {
             Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
+    }
+    
+    @WebMethod(operationName = "sprawdzLogin")
+    public boolean sprawdzLogin(@WebParam(name = "username") String username) {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        List<Zamowienie> list = new ArrayList<>();
+        ResultSet rs = null;
+        int state = 0;
+        try {
+
+            st = con.createStatement();
+            String sql = ("select count(*) from uzytkownicy where login = '" + username + "'");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                state = rs.getInt(1);
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(state == 0){
+            return false;
+        } else
+            return true;
     }
 }

@@ -9,6 +9,8 @@
     <message name="synchronizeResponse"/>
     <message name="getZamowieniaUzytkownika"/>
     <message name="getZamowieniaUzytkownikaResponse"/>
+    <message name="sprawdzLogin"/>
+    <message name="sprawdzLoginResponse"/>
     <portType name="NewWebService">
         <operation name="synchronize">
             <input message="tns:synchronize"/>
@@ -18,6 +20,10 @@
             <input message="tns:getZamowieniaUzytkownika"/>
             <output message="tns:getZamowieniaUzytkownikaResponse"/>
         </operation>
+        <operation name="sprawdzLogin">
+            <input message="tns:sprawdzLogin"/>
+            <output message="tns:sprawdzLoginResponse"/>
+        </operation>
     </portType>
     <binding name="NewWebServicePortBinding" type="tns:NewWebService">
         <wsp:PolicyReference URI="#NewWebServicePortBindingPolicy"/>
@@ -26,6 +32,10 @@
             <output/>
         </operation>
         <operation name="getZamowieniaUzytkownika">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="sprawdzLogin">
             <input/>
             <output/>
         </operation>

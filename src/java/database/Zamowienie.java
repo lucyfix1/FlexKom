@@ -17,8 +17,7 @@ public class Zamowienie {
     private int klientOD;
     private int oddzialID;
     private String status;
-    private Date dataZlozeniaZamowienia;
-    private Date ostatniaModyfikacja;
+    private String dataZlozeniaZamowienia;
 
     public void setZamowienieID(int zamowienieID) {
         this.zamowienieID = zamowienieID;
@@ -40,12 +39,8 @@ public class Zamowienie {
         this.status = status;
     }
 
-    public void setDataZlozeniaZamowienia(Date dataZlozeniaZamowienia) {
+    public void setDataZlozeniaZamowienia(String dataZlozeniaZamowienia) {
         this.dataZlozeniaZamowienia = dataZlozeniaZamowienia;
-    }
-
-    public void setOstatniaModyfikacja(Date ostatniaModyfikacja) {
-        this.ostatniaModyfikacja = ostatniaModyfikacja;
     }
 
     public int getZamowienieID() {
@@ -68,12 +63,8 @@ public class Zamowienie {
         return status;
     }
 
-    public Date getDataZlozeniaZamowienia() {
+    public String getDataZlozeniaZamowienia() {
         return dataZlozeniaZamowienia;
-    }
-
-    public Date getOstatniaModyfikacja() {
-        return ostatniaModyfikacja;
     }
     
 }
