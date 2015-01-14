@@ -5,8 +5,6 @@
  */
 package database;
 
-import java.sql.Date;
-
 /**
  *
  * @author Dariusz
@@ -15,6 +13,7 @@ public class Zamowienie {
     private int zamowienieID;
     private int produktID;
     private int klientOD;
+    private int pracownikID;
     private int oddzialID;
     private String status;
     private String dataZlozeniaZamowienia;
@@ -41,6 +40,14 @@ public class Zamowienie {
 
     public void setDataZlozeniaZamowienia(String dataZlozeniaZamowienia) {
         this.dataZlozeniaZamowienia = dataZlozeniaZamowienia;
+    }
+    
+    public void setPracownikID(int pracownikID) {
+        this.pracownikID = pracownikID;
+    }
+
+    public int getPracownikID() {
+        return pracownikID;
     }
 
     public int getZamowienieID() {

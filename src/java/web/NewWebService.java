@@ -43,7 +43,7 @@ import javax.jws.WebResult;
 @WebService(serviceName = "NewWebService")
 @Stateless()
 public class NewWebService {
-    private final String dbAddress = "jdbc:mysql://localhost:3306/flexkom2";
+    private final String dbAddress = "jdbc:mysql://localhost:3306/flexkom";
     private final String user = "root";
     private final String password = "mysql";
 
@@ -54,8 +54,8 @@ public class NewWebService {
      * @param ilosc
      * @return 
      */
-    @WebMethod(operationName = "uaktylnijProduktyOddzialy")
-    public String uaktylnijProduktyOddzialy(@WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "produktID") int produktID, @WebParam(name = "ilosc") int ilosc){
+    @WebMethod(operationName = "uaktualnijProduktyOddzialy")
+    public String uaktualnijProduktyOddzialy(@WebParam(name = "oddzialID") int oddzialID, @WebParam(name = "produktID") int produktID, @WebParam(name = "ilosc") int ilosc){
         //TODO write your implementation code here:
         Connection con = MysqlConnection.connect(dbAddress,user,password);
 
@@ -69,10 +69,10 @@ public class NewWebService {
             preparedStatement.setInt(1, ilosc);
             preparedStatement.executeUpdate();
             preparedStatement.close();
-            return "zaktualizowano";
+            return "true";
         } catch (SQLException ex) {
             Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
-            return "dane nie zostały zaktualizowane";
+            return "0";
         } finally {
             try {
                 con.close();
@@ -168,23 +168,28 @@ public class NewWebService {
         Calendar calendar = Calendar.getInstance();
         java.sql.Timestamp ourJavaTimestampObject = new java.sql.Timestamp(calendar.getTime().getTime());
         System.out.println(ourJavaTimestampObject.toString());
-        String insertQuery = "insert into zamowienia (produktID,klientID,oddzialID,status,dataZlozeniaZamowienia,pracownikID) values(?,?,?,'oczekujacy',?,?,?)";
+        String insertQuery = "insert into zamowienia (produktID,klientID,oddzialID,status,dataZlozeniaZamowienia,pracownikID) values(?,?,?,'oczekujacy',?,?)";
         
         PreparedStatement preparedStatement;
         try {
             java.util.Date date = new java.util.Date();
             preparedStatement = con.prepareStatement(insertQuery);
             preparedStatement.setInt(1, produktID);
-            preparedStatement.setInt(2, klientID);
+            if(klientID != 0){
+                preparedStatement.setInt(2, klientID);
+            }
+            else {
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+            }
             preparedStatement.setInt(3, oddzialID);
             preparedStatement.setDate(4,new java.sql.Date(date.getTime()));
             preparedStatement.setInt(5, pracownikID);
             preparedStatement.executeUpdate();
             preparedStatement.close();
-            return "dodano zamowienie";
+            return "true";
         } catch (SQLException ex) {
             Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
-            return "zamowienie nie zostało dodane";
+            return "0";
         } finally {
             try {
                 con.close();
@@ -637,6 +642,7 @@ public class NewWebService {
                 zamowienie.setOddzialID(rs.getInt("oddzialID"));
                 zamowienie.setStatus(rs.getString("status"));
                 zamowienie.setDataZlozeniaZamowienia(rs.getTimestamp("dataZlozeniaZamowienia").toString());
+                zamowienie.setPracownikID(rs.getInt("pracownikID"));
                 list.add(zamowienie);
             }
             preparedStatement.close();
@@ -666,6 +672,15 @@ public class NewWebService {
             PreparedStatement preparedStatement;
             preparedStatement = con.prepareStatement(sql);
             rs = preparedStatement.executeQuery();
+            if(!rs.first()){
+                    sql = ("select * from zamowienia " +
+                               "inner join pracownicy on zamowienia.pracownikID = pracownicy.pracownikID " +
+                               "inner join uzytkownicy on  pracownicy.uzytkownikID = uzytkownicy.uzytkownikID " +
+                               "where uzytkownicy.login = '" + username + "'"); 
+                     preparedStatement = con.prepareStatement(sql);
+                     rs = preparedStatement.executeQuery();
+            }
+            rs.beforeFirst();
             while(rs.next()){
                 Zamowienie zamowienie = new Zamowienie();
                 zamowienie.setZamowienieID(rs.getInt("zamowienieID"));
@@ -673,6 +688,7 @@ public class NewWebService {
                 zamowienie.setKlientOD(rs.getInt("klientID"));
                 zamowienie.setOddzialID(rs.getInt("oddzialID"));
                 zamowienie.setStatus(rs.getString("status"));
+                zamowienie.setPracownikID(rs.getInt("pracownikID"));
                 zamowienie.setDataZlozeniaZamowienia(rs.getDate("dataZlozeniaZamowienia").toString());
                 list.add(zamowienie);
             }
@@ -715,4 +731,68 @@ public class NewWebService {
         } else
             return true;
     }
+    
+    @WebMethod(operationName = "getKategoriaProducenci")
+    public List<Producenci> getKategoriaProducenci(@WebParam(name = "kategoria") String kategoria) {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        List<Producenci> list = new ArrayList<>();
+        ResultSet rs = null;
+        try {
+
+            st = con.createStatement();
+            String sql = (   " SELECT producenci.producentID,producenci.nazwa from kategorieproducent " +
+                "inner join kategorie on kategorie.kategoriaID = kategorieproducent.kategoriaID " + 
+                "inner join producenci on producenci.producentID = kategorieproducent.producentID " +
+                "where kategorie.nazwa = '" + kategoria + "';");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Producenci producent = new Producenci();
+                producent.setProducentID(rs.getInt("producentID"));
+                producent.setNazwa(rs.getString("nazwa"));
+                list.add(producent);
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+    @WebMethod(operationName = "getProduktyProducent")
+    public List<Produkty> getProduktyProducent(@WebParam(name = "producentID") int producentID,@WebParam(name = "poczatek") int poczatek,@WebParam(name = "ilosc") int ilosc) {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        List<Produkty> list = new ArrayList<>();
+        ResultSet rs = null;
+        try {
+
+            st = con.createStatement();
+            String sql = ( "select * from produkty where producentID = " + Integer.toString(producentID) + " limit " + Integer.toString(poczatek) + "," + Integer.toString(ilosc) +";");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Produkty produkt = new Produkty();
+                produkt.setProducentID(rs.getInt("producentID"));
+                produkt.setNazwa(rs.getString("nazwa"));
+                produkt.setKategoriaID(rs.getInt("kategoriaID"));
+                produkt.setCena(rs.getFloat("cena"));
+                list.add(produkt);
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
 }
