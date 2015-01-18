@@ -10,6 +10,7 @@ import database.KategorieProducent;
 import database.Klienci;
 import database.Pracownicy;
 import database.Producenci;
+import database.Produkt;
 import database.ProduktOddzialy;
 import database.Produkty;
 import database.ProduktyOddzialy;
@@ -22,7 +23,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -181,9 +181,19 @@ public class NewWebService {
             else {
                 preparedStatement.setNull(2, java.sql.Types.INTEGER);
             }
-            preparedStatement.setInt(3, oddzialID);
+            if(oddzialID != 0){
+                preparedStatement.setInt(3, oddzialID);
+            }
+            else {
+                preparedStatement.setNull(3, java.sql.Types.INTEGER);
+            }
             preparedStatement.setDate(4,new java.sql.Date(date.getTime()));
-            preparedStatement.setInt(5, pracownikID);
+            if(pracownikID != 0){
+                preparedStatement.setInt(5, pracownikID);
+            }
+            else {
+                preparedStatement.setNull(5, java.sql.Types.INTEGER);
+            }
             preparedStatement.executeUpdate();
             preparedStatement.close();
             return "true";
@@ -779,6 +789,7 @@ public class NewWebService {
             rs = preparedStatement.executeQuery();
             while(rs.next()){
                 Produkty produkt = new Produkty();
+                produkt.setProduktID(rs.getInt("produktID"));
                 produkt.setProducentID(rs.getInt("producentID"));
                 produkt.setNazwa(rs.getString("nazwa"));
                 produkt.setKategoriaID(rs.getInt("kategoriaID"));
@@ -794,5 +805,125 @@ public class NewWebService {
         }
         return list;
     }
+    
+    @WebMethod(operationName = "getProdukt")
+    public Produkt getProdukt(@WebParam(name = "produktID") int produktID) {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        Produkt produkt = new Produkt();
+        ResultSet rs = null;
+        try {
 
+            st = con.createStatement();
+            String sql = ( "select producenci.nazwa,produkty.nazwa,produkty.cena from produkty,producenci where produktID = " + produktID +" && producenci.producentID = produkty.producentID;");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                produkt.setNazwaProducenta(rs.getString(1));
+                produkt.setNazwaProduktu(rs.getString(2));
+                produkt.setCena(rs.getFloat("cena"));
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return produkt;
+    }
+    
+    @WebMethod(operationName = "getKlientPrzezUzytkownikID")
+    public Klienci getKlientPrzezUzytkownikID(@WebParam(name = "uzytkownikID") int uzytkownikID) {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        Klienci klient = new Klienci();
+        ResultSet rs = null;
+        try {
+
+            st = con.createStatement();
+            String sql = ( "select klienci.klientID, klienci.uzytkownikID,klienci.stanKonta,klienci.dataZalozenia from klienci " +
+                        "inner join uzytkownicy on uzytkownicy.uzytkownikID  = klienci.uzytkownikID  where uzytkownicy.uzytkownikID = " + uzytkownikID + ";");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                klient.setKlientID(rs.getInt("klientID"));
+                klient.setUzytkownikID(rs.getInt("uzytkownikID"));
+                klient.setStanKonta(rs.getFloat("stanKonta"));
+                klient.setDataZalozenia(rs.getDate("dataZalozenia"));
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return klient;
+    }
+    
+   
+    @WebMethod(operationName = "get3NajgorzejSprzedajaceProdukty")
+    public List<Produkty> get3NajgorzejSprzedajaceProdukty() {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        List<Produkty> list = new ArrayList<>();
+        ResultSet rs = null;
+        try {
+
+            st = con.createStatement();
+            String sql = ( "select produkty.produktID, produkty.producentID, produkty.kategoriaID, produkty.nazwa, produkty.cena from zamowienia " +
+                "inner join produkty on produkty.produktID = zamowienia.produktID group by zamowienia.produktID order by count(*) limit 0,3;");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Produkty produkt = new Produkty();
+                produkt.setProduktID(rs.getInt("produktID"));
+                produkt.setProducentID(rs.getInt("producentID"));
+                produkt.setNazwa(rs.getString("nazwa"));
+                produkt.setKategoriaID(rs.getInt("kategoriaID"));
+                produkt.setCena(rs.getFloat("cena"));
+                list.add(produkt);
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+    
+     @WebMethod(operationName = "loginHaslo")
+    public boolean loginHaslo(@WebParam(name = "login") String login,@WebParam(name = "haslo")String haslo) {
+        Connection con = MysqlConnection.connect(dbAddress,user,password);
+        Statement st;
+        ResultSet rs = null;
+        int state = 0;
+        try {
+
+            st = con.createStatement();
+            String sql = ("select * from uzytkownicy where login = '" +  login + "' and haslo = '" + haslo + "' ;");
+            PreparedStatement preparedStatement;
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+             while(rs.next()){
+                state = rs.getInt(1);
+            }
+            preparedStatement.close();
+ 
+            con.close();          
+           
+        } catch (SQLException ex) {
+            Logger.getLogger(NewWebService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(state == 0){
+            return false;
+        } else
+            return true;
+    }
 }

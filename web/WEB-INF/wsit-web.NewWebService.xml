@@ -11,6 +11,12 @@
     <message name="getZamowieniaUzytkownikaResponse"/>
     <message name="sprawdzLogin"/>
     <message name="sprawdzLoginResponse"/>
+    <message name="getKlientPrzezUzytkownikID"/>
+    <message name="getKlientPrzezUzytkownikIDResponse"/>
+    <message name="get3NajgorzejSprzedajaceProdukty"/>
+    <message name="get3NajgorzejSprzedajaceProduktyResponse"/>
+    <message name="loginHaslo"/>
+    <message name="loginHasloResponse"/>
     <portType name="NewWebService">
         <operation name="synchronize">
             <input message="tns:synchronize"/>
@@ -24,6 +30,18 @@
             <input message="tns:sprawdzLogin"/>
             <output message="tns:sprawdzLoginResponse"/>
         </operation>
+        <operation name="getKlientPrzezUzytkownikID">
+            <input message="tns:getKlientPrzezUzytkownikID"/>
+            <output message="tns:getKlientPrzezUzytkownikIDResponse"/>
+        </operation>
+        <operation name="get3NajgorzejSprzedajaceProdukty">
+            <input message="tns:get3NajgorzejSprzedajaceProdukty"/>
+            <output message="tns:get3NajgorzejSprzedajaceProduktyResponse"/>
+        </operation>
+        <operation name="loginHaslo">
+            <input message="tns:loginHaslo"/>
+            <output message="tns:loginHasloResponse"/>
+        </operation>
     </portType>
     <binding name="NewWebServicePortBinding" type="tns:NewWebService">
         <wsp:PolicyReference URI="#NewWebServicePortBindingPolicy"/>
@@ -36,6 +54,18 @@
             <output/>
         </operation>
         <operation name="sprawdzLogin">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="getKlientPrzezUzytkownikID">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="get3NajgorzejSprzedajaceProdukty">
+            <input/>
+            <output/>
+        </operation>
+        <operation name="loginHaslo">
             <input/>
             <output/>
         </operation>
